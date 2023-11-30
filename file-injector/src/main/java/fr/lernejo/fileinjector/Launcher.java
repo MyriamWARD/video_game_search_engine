@@ -1,8 +1,6 @@
 package fr.lernejo.fileinjector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.rabbitmq.client.MessageProperties;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,20 +16,14 @@ import java.util.List;
 
 @SpringBootApplication
 public class Launcher {
-
     public static void main(String[] args) throws IOException {
         try (AbstractApplicationContext springContext = new AnnotationConfigApplicationContext(Launcher.class)) {
-
             if (args.length > 0) {
-
                 File inputFile = Paths.get(args[0]).toFile();
                 ObjectMapper objectMapper = new ObjectMapper();
                 List<GameInfo> Gameinfo = Arrays.asList(objectMapper.readValue(inputFile, GameInfo.class));
-
-
                 RabbitTemplate rabbitTemplate = new RabbitTemplate();
                 rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
-
                 for (GameInfo gameInfo : Gameinfo) {
                     MessagePostProcessor messagePostProcessor = message -> {
                         message.getMessageProperties().getHeaders().put("game_id", gameInfo.id());
