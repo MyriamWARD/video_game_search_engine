@@ -16,12 +16,9 @@ import static fr.lernejo.search.api.AmqpConfiguration.GAME_INFO_QUEUE;
 @Component
 public class GameInfoListener {
         private final RestHighLevelClient restHighLevelClient;
-
-        @Autowired
         public GameInfoListener(RestHighLevelClient restHighLevelClient) {
             this.restHighLevelClient = restHighLevelClient;
         }
-
         @RabbitListener(queues = GAME_INFO_QUEUE)
         public void onMessage(byte[] message, @Header ("game_id") String id) throws IOException {
             IndexRequest indexRequest = new IndexRequest("games").id(id).source(message, XContentType.JSON);

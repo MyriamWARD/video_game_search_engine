@@ -23,10 +23,8 @@ public class ElasticSearchConfiguration {
         @Value("${elasticsearch.password:admin}") String Password) {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(Username, Password));
-
         RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost(Host, Port))
             .setHttpClientConfigCallback(httpAsyncClientBuilder -> httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
-
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(restClientBuilder);
         return restHighLevelClient;
     }

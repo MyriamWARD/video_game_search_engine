@@ -24,6 +24,9 @@
 
         <!-- Dependencies -->
         <spring-boot.version>2.6.2</spring-boot.version>
+        <elasticsearch.version>7.17.15</elasticsearch.version>
+        <jackson.version>2.13.1</jackson.version>
+
 
         <!-- Test dependencies -->
         <junit.version>5.8.2</junit.version>
@@ -33,7 +36,6 @@
         <!-- Maven plugins -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
-        <elasticsearch.version>7.17.15</elasticsearch.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +56,11 @@
                 <groupId>org.elasticsearch.client</groupId>
                 <artifactId>elasticsearch-rest-high-level-client</artifactId>
                 <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
 
             <!-- Dev dependencies -->
