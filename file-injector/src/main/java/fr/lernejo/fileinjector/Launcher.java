@@ -19,17 +19,14 @@ public class Launcher {
     public static void main(String[] args) throws IOException {
         try (AbstractApplicationContext springContext = new AnnotationConfigApplicationContext(Launcher.class)) {
             if (args.length > 0) {
-                File inputFile = Paths.get(args[0]).toFile();
                 ObjectMapper objectMapper = new ObjectMapper();
-                List<GameInfo> Gameinfo = Arrays.asList(objectMapper.readValue(inputFile, GameInfo.class));
-                RabbitTemplate rabbitTemplate = new RabbitTemplate();
-                rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+                List<GameInfo> Gameinfo = Arrays.asList(objectMapper.readValue(Paths.get(args[0]).toFile(), GameInfo.class));
+                RabbitTemplate rabbitTemplate = springContext.getBean(RabbitTemplate.class);
                 for (GameInfo gameInfo : Gameinfo) {
-                    MessagePostProcessor messagePostProcessor = message -> {
+                    rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+                    rabbitTemplate.convertAndSend("game_info", "", message -> {
                         message.getMessageProperties().getHeaders().put("game_id", gameInfo.id());
-                        return message;
-                    };
-                    rabbitTemplate.convertAndSend("game_info", "", gameInfo, messagePostProcessor);
+                        return message;});
                 }
             }
         } catch (IOException err) {
